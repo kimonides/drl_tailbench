@@ -38,31 +38,31 @@ RUN ./configure && \
     make install
 
 
-COPY tailbench-v0.9 /tailbench-v0.9
+COPY tailbench /tailbench
 
 WORKDIR /
-RUN echo "JDK_PATH=/usr/lib/jvm/java-8-openjdk-amd64" > tailbench-v0.9/Makefile.config
+RUN echo "JDK_PATH=/usr/lib/jvm/java-8-openjdk-amd64" > tailbench/Makefile.config
 
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
-WORKDIR /tailbench-v0.9/harness
+WORKDIR /tailbench/harness
 RUN ./build.sh
 
-WORKDIR /tailbench-v0.9/sphinx
+WORKDIR /tailbench/sphinx
 RUN ./build.sh
 
-WORKDIR /tailbench-v0.9/xapian/xapian-core-1.2.13
+WORKDIR /tailbench/xapian/xapian-core-1.2.13
 RUN ./configure --prefix=${PWD}/install
 RUN sed -i 's/CXX = g++/CXX = g++ -std=c++03/g' Makefile
 RUN make -j6 && make install
-WORKDIR /tailbench-v0.9/xapian
+WORKDIR /tailbench/xapian
 RUN ./build.sh
 
-ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tailbench-v0.9/xapian/xapian-core-1.2.13/.libs
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tailbench/xapian/xapian-core-1.2.13/.libs
 
-WORKDIR /tailbench-v0.9/moses
+WORKDIR /tailbench/moses
 RUN ./build.sh
 
-WORKDIR /tailbench-v0.9/img-dnn
+WORKDIR /tailbench/img-dnn
 RUN ./build.sh
